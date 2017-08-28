@@ -24,7 +24,7 @@
 
     <dependency>
       <groupId>com.itechtopus.tanks</groupId>
-      <artifactId>BattleField</artifactId>
+      <artifactId>BattleFieldAPI</artifactId>
       <version>1.0</version>
     </dependency>
 

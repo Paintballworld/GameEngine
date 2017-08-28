@@ -1,18 +1,21 @@
 package com.itechtopus.tanks.implementations;
 
-import com.itechtopus.tanks.interfaces.Field;
 import com.itechtopus.tanks.interfaces.GameEngine;
 import com.itechtopus.tanks.interfaces.Tank;
+import com.itechtopus.tanks.interfaces.field.Field;
 import com.itechtopus.tanks.interfaces.models.Direction;
+import com.itechtopus.tanks.interfaces.models.MovingModel;
 import com.itechtopus.tanks.interfaces.models.Position;
 
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 public class RealTank implements Tank {
 
-    private static final int RELOAD_TIMEOUT = 500;
-    private static final int TIMEOUT_PER_STEP = 20;
+    private static final int RELOAD_TIMEOUT = 1_000;//TODO Переделать чтобы не стрелял пока снаряд не долетит
+    private static final int TIMEOUT_PER_STEP = 100;
     private static final float DEFAULT_TANK_SPEED = 0.2f;
 
     private AtomicInteger stepCounter = new AtomicInteger(0);
@@ -69,7 +72,7 @@ public class RealTank implements Tank {
     private void step() {
         if (ready() && canGo(getDirection())) {
             position.step(tankSpeed);
-            if (position.isInPosition())
+            if (position.positionIsExact())
                 System.out.println("Step " + position);
         }
     }
@@ -86,23 +89,25 @@ public class RealTank implements Tank {
         return fireCounter.get() <= 0;
     }
 
+    @Override
     public void turn(Direction direction) {
-        // TODO сделать проверку, что танк в позиции, аогда повернуть можно
-        // если нет, то отложить поворот
-        this.position.setDirection(direction);
+
     }
 
     public void turnLeft() {
+        if (!ready()) return;
         System.out.println("Left");
         this.position.setDirection(Direction.turnLeftOf(getDirection()));
     }
 
     public void turnRight() {
+        if (!ready()) return;
         System.out.println("Right");
         this.position.setDirection(Direction.turnRightOf(getDirection()));
     }
 
     public void reverse() {
+        if (!ready()) return;
         this.position.setDirection(Direction.oppositeOf(getDirection()));
     }
 
@@ -131,16 +136,23 @@ public class RealTank implements Tank {
         return position.getDirection();
     }
 
+    @Override
+    public boolean collidesWith(Position target) {
+        return false;
+    }
+
+    @Override
+    public boolean coolidesWith(MovingModel target) {
+        return false;
+    }
+
+
     public int getHealth() {
         return health;
     }
 
     public boolean canGo(Direction direction) {
-        Position positionFor = position.getPositionFor(direction);
-        return positionFor.getX() >= 0 &&
-                positionFor.getX() <= field.getWidth() &&
-                positionFor.getY() >= 0 &&
-                positionFor.getY() <= field.getHeight();
+        return Stream.of(field.getBlocksAhead()).filter(Objects::nonNull).count() == 0;
     }
 
     public boolean isAlive() {
