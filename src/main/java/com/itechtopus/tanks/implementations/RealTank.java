@@ -7,7 +7,9 @@ import com.itechtopus.tanks.interfaces.models.Direction;
 import com.itechtopus.tanks.interfaces.models.MovingModel;
 import com.itechtopus.tanks.interfaces.models.Position;
 
+import java.util.LinkedList;
 import java.util.Objects;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
@@ -15,38 +17,35 @@ import java.util.stream.Stream;
 public class RealTank implements Tank {
 
     private static final int RELOAD_TIMEOUT = 1_000;//TODO Переделать чтобы не стрелял пока снаряд не долетит
-    private static final int TIMEOUT_PER_STEP = 100;
-    private static final float DEFAULT_TANK_SPEED = 0.2f;
+    private static final int TIMEOUT_PER_STEP = 15;
+    private static final float DEFAULT_TANK_SPEED = 0.025f;
 
     private AtomicInteger stepCounter = new AtomicInteger(0);
     private AtomicInteger fireCounter = new AtomicInteger(0);
     private AtomicBoolean isMoving = new AtomicBoolean(false);
 
+    private Queue<Direction> directionQueue = new LinkedList<>();
+
     private Runnable fireCounterJob = () -> {
+        count(fireCounter);
+    };
+
+    private void count(AtomicInteger aCounter) {
         while (true) {
             try {
-                Thread.sleep(10);
-                fireCounter.decrementAndGet();
-                if (fireCounter.get() <= 0)
+                Thread.sleep(1);
+                aCounter.decrementAndGet();
+                if (aCounter.get() <= 0)
                     break;
             } catch (InterruptedException e) {
                 break;
             }
         }
-    };
+    }
 
     private Runnable stepCounterJob = () -> {
         while (isMoving.get()) {
-            while (true) {
-                try {
-                    Thread.sleep(10);
-                    stepCounter.decrementAndGet();
-                    if (stepCounter.get() <= 0)
-                        break;
-                } catch (InterruptedException e) {
-                    break;
-                }
-            }
+            count(stepCounter);
             step();
             stepCounter.set(TIMEOUT_PER_STEP);
         }
@@ -70,10 +69,15 @@ public class RealTank implements Tank {
     }
 
     private void step() {
-        if (ready() && canGo(getDirection())) {
+        if (ready() && canGo()) {
+            if (position.positionIsExact() && !directionQueue.isEmpty()) {
+                if (directionQueue.poll() == Direction.LEFT)
+                    turnLeft();
+                else
+                    turnRight();
+            }
             position.step(tankSpeed);
-            if (position.positionIsExact())
-                System.out.println("Step " + position);
+            checkLimits();
         }
     }
 
@@ -95,15 +99,21 @@ public class RealTank implements Tank {
     }
 
     public void turnLeft() {
-        if (!ready()) return;
-        System.out.println("Left");
+        if (!ready()) {
+            directionQueue.offer(Direction.LEFT);
+            return;
+        }
         this.position.setDirection(Direction.turnLeftOf(getDirection()));
+        System.out.println("Left:" + this.position.getDirection().name());
     }
 
     public void turnRight() {
-        if (!ready()) return;
-        System.out.println("Right");
+        if (!ready()) {
+            directionQueue.offer(Direction.RIGHT);
+            return;
+        }
         this.position.setDirection(Direction.turnRightOf(getDirection()));
+        System.out.println("Right:" + this.position.getDirection().name());
     }
 
     public void reverse() {
@@ -112,7 +122,7 @@ public class RealTank implements Tank {
     }
 
     public void go() {
-        if (!isMoving.get()) {
+        if (!isMoving.get() && canGo() && checkLimits()) {
             System.out.println("Ahead!");
             isMoving.set(true);
             new Thread(stepCounterJob).start();
@@ -120,7 +130,7 @@ public class RealTank implements Tank {
     }
 
     public boolean ready() {
-        return stepCounter.get() <= 0;
+        return stepCounter.get() == 0;
     }
 
     public void stop() {
@@ -151,11 +161,24 @@ public class RealTank implements Tank {
         return health;
     }
 
-    public boolean canGo(Direction direction) {
+    public boolean canGo() {
         return Stream.of(field.getBlocksAhead()).filter(Objects::nonNull).count() == 0;
     }
 
     public boolean isAlive() {
         return health > 0;
+    }
+
+    private boolean checkLimits() {
+        if (getPosition().getMinX() == 0 ||
+                getPosition().getMinY() == 0 ||
+                getPosition().getMaxX() == field.getWidth() ||
+                getPosition().getMaxY() == field.getHeight()) {
+            if (isMoving.get()) {
+                turnLeft();
+            }
+            return false;
+        }
+        return true;
     }
 }

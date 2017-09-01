@@ -12,7 +12,7 @@ public enum ModelType {
         this.sizeY = sizeY;
     }
 
-    public int getSixeX() {
+    public int getSizeX() {
         return sixeX;
     }
 

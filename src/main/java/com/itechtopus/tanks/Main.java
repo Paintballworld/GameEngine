@@ -12,12 +12,14 @@ import com.itechtopus.tanks.interfaces.Tanker;
 import com.itechtopus.tanks.interfaces.field.Field;
 import com.itechtopus.tanks.interfaces.models.Direction;
 import com.itechtopus.tanks.model.ModelType;
+import com.itechtopus.tanks.tank.MyStupidTanker;
 import com.itechtopus.tanks.visualisation.CanvasDrawer;
+import com.itechtopus.tanks.visualisation.impl.JFrameDrawer;
 import com.itechtopus.tanks.visualisation.impl.SoutCanvasDrawer;
 
 public class Main {
 
-    private static final long DRAWER_SLEEP_TIME = 100L;
+    private static final long DRAWER_SLEEP_TIME = 1000L;
     private Tanker tanker;
 
     public static void main(String[] args) {
@@ -25,19 +27,23 @@ public class Main {
 
         Field field = new FieldReal(52, 52, player1);
         GameEngine engine = new MainGameEngine(field);
-        Tank aTank = new RealTank(new PositionReal(ModelType.TANK, 0, 0, Direction.DOWN), 100, engine);
+        Tank aTank = new RealTank(new PositionReal(ModelType.TANK, 5, 5, Direction.DOWN), 100, engine);
 
         player1.setMyTank(aTank);
         player1.setGameEngine(engine);
+        aTank.go();
 
-        CanvasDrawer drawer = new SoutCanvasDrawer(field, aTank);
+        CanvasDrawer drawer = new JFrameDrawer(10, field, aTank);
+
+        drawer.draw();
 
         Thread player1Routine = new Thread(player1);
         player1Routine.start();
 
-        new Thread(() -> {
+        /*new Thread(() -> {
            while (true) {
                drawer.draw();
+//               System.out.println(aTank.getPosition().getMiddlePoint());
                try {
                    Thread.sleep(DRAWER_SLEEP_TIME);
                } catch (InterruptedException e) {
@@ -45,7 +51,7 @@ public class Main {
                    break;
                }
            }
-        }).start();
+        }).start();*/
 
     }
 }

@@ -57,23 +57,31 @@ public class PositionReal implements Position {
 
     @Override
     public int getMinX() {
-        return (int)(x - modelType.getSixeX() / 2 - 1);
+        return (int)(x - modelType.getSizeX() / 2 );
     }
+
+    public float getRealMinX() { return x - modelType.getSizeX() / 2 ; }
 
     @Override
     public int getMinY() {
-        return (int) (y - modelType.getSizeY() / 2 - 1);
+        return (int) (y - modelType.getSizeY() / 2);
     }
+
+    public float getRealMinY() { return y - modelType.getSizeY() / 2 ;  }
 
     @Override
     public int getMaxX() {
-        return (int) (x + modelType.getSixeX() / 2);
+        return (int) (x + modelType.getSizeX() / 2);
     }
+
+    public float getRealMaxX() { return x + modelType.getSizeX() / 2 ;  }
 
     @Override
     public int getMaxY() {
-        return (int) (x + modelType.getSizeY() / 2);
+        return (int) (y + modelType.getSizeY() / 2);
     }
+
+    public float getRealMaxY() { return y +  modelType.getSizeY() / 2 ;  }
 
     @Override
     public Point getMiddlePoint() {
@@ -87,7 +95,7 @@ public class PositionReal implements Position {
 
     @Override
     public String toString() {
-        return '(' + x +
+        return "(" + x +
                 ", " + y +
                 ')';
     }
@@ -98,10 +106,28 @@ public class PositionReal implements Position {
     }
 
     public static boolean containsPoint(Position position, Point point) {
-        return position.getMinX() >= point.getX() &&
-                position.getMaxX() < point.getX() &&
-                position.getMinY() >= point.getY() &&
-                position.getMaxY() < point.getY();
+        return point.getX() >= position.getMinX() &&
+                point.getX() < position.getMaxX() &&
+                point.getY() >= position.getMinY() &&
+                point.getY() < position.getMaxY();
+
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        PositionReal p = new PositionReal(ModelType.TANK, 5, 5, Direction.RIGHT);
+        System.out.println(p.getDirection().xDelta() + ":" + p.getDirection().yDelta() + ": must be +1:0");
+        System.out.println(p.getAhead().getMiddlePoint() + ": must be (6, 5)");
+        RealTank tank = new RealTank(p, 100, new MainGameEngine(new FieldReal(40, 10, null)));
+        System.out.println(tank.getPosition().getMiddlePoint() + ": must be (5, 5)");
+        System.out.println(tank.getPosition().getMinX() + ", " + tank.getPosition().getMinY() + " : must be (3, 3)");
+        System.out.println(tank.getPosition().getMiddlePoint() + ": must be (5, 5)");
+        System.out.println(tank.getPosition().getMaxX() + ", " + tank.getPosition().getMaxY() + " : must be (7, 7)");
+        tank.go();
+        Thread.sleep(3000);
+        System.out.println(tank.getPosition().getMinX() + ", " + tank.getPosition().getMinY() + " : (4, 3)");
+        System.out.println(tank.getPosition().getMiddlePoint() + ": must be (6, 5)");
+        System.out.println(tank.getPosition().getMaxX() + ", " + tank.getPosition().getMaxY() + " : (8, 7)");
+
 
     }
 }

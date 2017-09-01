@@ -1,0 +1,333 @@
+public class Main {
+    public static void main(String[] args) {
+        Frame frame = new Frame();
+    }
+}
+
+//mouseListener.java
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+public class mouseListener implements MouseListener{
+    boolean clicked = false;
+    public void mouseClicked(MouseEvent arg0) {}
+    public void mouseEntered(MouseEvent arg0) {}
+    public void mouseExited(MouseEvent arg0) {}
+    public void mousePressed(MouseEvent arg0) {
+        clicked = true;
+    }
+    public void mouseReleased(MouseEvent arg0) {}
+}
+
+//Bird
+
+public class Bird {
+    public static double vy = 0;
+    public static double y = 400;
+    public static double angle = 0;
+
+    public static boolean started = false;
+
+    public static int cycle_speed = 10;
+    public static int cycle_pos = 0;
+    public static int tex = 0;
+
+    public static void update(){
+        angle = (Math.PI+1)/18*vy-(Math.PI+4)/6;
+        cycle_speed = (int)(14/9*vy+4/3);
+
+        if(vy < 3){
+            angle = -0.5;
+            cycle_speed = 6;}
+        if(vy > 12){
+            angle = Math.PI/2;
+            cycle_speed = 20;}
+
+        if(vy < 8){
+            cycle_pos++;
+            if(cycle_pos > cycle_speed){
+                cycle_pos = 0;
+                tex++;
+                if(tex > 2){
+                    tex = 0;
+                }
+            }
+        }
+        else{
+            tex = 0;
+        }
+        if(started){
+            vy+=0.5;
+            y+=vy;
+            boolean collide = false;
+            for(int i = 0; i < 10; i++){
+                if(Frame.pipeIs[i]){
+                    if(Frame.pipes[i].collide()) collide = true;
+                }
+            }
+            if(y > 630 || y < 10 || collide){
+                if(Frame.score > Frame.best){
+                    Frame.new_best = true;
+                    Frame.best = Frame.score;
+                    Frame.Save();
+                }
+                Frame.menu = true;
+            }
+            if(y > 630){
+                y = 630;
+                angle = Math.PI/2;
+            }
+        }
+        else{
+            y += Math.sin(Frame.frame_real*Math.PI/15)/3;
+            angle = 0;
+        }
+    }
+}
+
+//Pipe
+
+public class Pipe {
+    int x = 0;
+    int height = 0;
+    boolean passed = false;
+    public Pipe(int _x, int h){
+        x = _x;
+        height = h;
+    }
+    public int getX(){
+        return x;
+    }
+    public int getHeight(){
+        return height;
+    }
+    public void X(){
+        x-=2;
+        if(x == 110) passed = true;
+    }
+    public boolean getPassed(){
+        if(passed){
+            passed = false;
+            return true;
+        }
+        return false;
+    }
+    public boolean collide(){
+        if(x < 180 && x+102 > 140 && (Bird.y+20 > height+70 || Bird.y-20 < height-70)){
+            return true;
+        }
+        return false;
+    }
+}
+
+//Frame
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import javax.swing.JFrame;
+
+public class Frame extends JFrame{
+    mouseListener ml = new mouseListener();
+    Panel panel = new Panel();
+
+    public static int groundCycle = 0;
+
+    public static Pipe pipes[] = new Pipe[10];
+    public static boolean pipeIs[] = new boolean[10];
+
+    public static int best = 0;
+    public static boolean menu = false;
+
+    public static int score = 0;
+    public static boolean new_best = false;
+
+    public static int frame_real = 0;
+    public static int frame = 0;
+
+    public static int MousePos[] = new int[2];
+
+    public Frame(){
+        this.setVisible(true);
+        this.setSize(582, 796);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        this.setContentPane(panel);
+        this.addMouseListener(ml);
+
+        Charge();
+
+        panel.chargeTextures();
+        Trame();
+    }
+
+    public static void Charge(){
+        try {
+            File f = new File("score.txt");
+            BufferedReader reader = new BufferedReader(new FileReader(f));
+            String line = reader.readLine();
+            best = Integer.parseInt(line);
+            reader.close();
+        }
+        catch (IOException e) {e.printStackTrace();}
+    }
+
+    public static void Save(){
+        try {
+            File f = new File("score.txt");
+            BufferedWriter writer = new BufferedWriter(new FileWriter(f));
+            writer.write(Integer.toString(best));
+            writer.flush();
+            writer.close();
+        }
+        catch (IOException e) {e.printStackTrace();}
+    }
+
+    public void Trame(){
+        while(true){
+            Bird.update();
+            frame_real++;
+            if(!menu){
+                groundCycle+=2;
+                if(groundCycle > 48) groundCycle = 0;
+
+                if(ml.clicked){
+                    if(!Bird.started) Bird.started = true;
+                    Bird.vy = -8;
+                }
+
+                if(Bird.started) frame++;
+                if(frame== 200){
+                    frame = 0;
+                    int i = 0;
+                    while(pipeIs[i]) i++;
+                    pipes[i] = new Pipe(580, (int)(Math.random()*390+125));
+                    pipeIs[i] = true;
+                }
+
+                for(int i = 0; i < 10; i++){
+                    if(pipeIs[i]){
+                        pipes[i].X();
+                        if(pipes[i].getPassed()) score++;
+                        if(pipes[i].getX() < -110) pipeIs[i] = false;
+                    }
+                }
+            }
+            else{
+                if(ml.clicked){
+                    if(MousePos[0] > 213 && MousePos[0] < 369 && MousePos[1] > 450 && MousePos[1] < 506){
+                        Bird.started = false;
+                        Bird.y = 400;
+                        score = 0;
+                        for(int i = 0; i < 10; i++) if(pipeIs[i]) pipeIs[i] = false;
+                        frame = 0;
+                        new_best = false;
+                        menu = false;
+                    }
+                }
+            }
+
+            ml.clicked = false;
+
+            panel.repaint();
+
+            try {Thread.sleep(13);}
+            catch (InterruptedException e) {e.printStackTrace();}
+        }
+    }
+}
+
+//Panel
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.MouseInfo;
+
+import javax.swing.ImageIcon;
+import javax.swing.JPanel;
+
+public class Panel extends JPanel{
+    Image img[] = new Image[23];
+    public void paintComponent(Graphics g){
+        Frame.MousePos[0] = MouseInfo.getPointerInfo().getLocation().x-getLocationOnScreen().x;
+        Frame.MousePos[1] = MouseInfo.getPointerInfo().getLocation().y-getLocationOnScreen().y;
+
+        Graphics2D g2d = (Graphics2D) g;
+
+        g.drawImage(img[10], 0, 0, null);
+
+        for(int i = 0; i < 10; i++){
+            if(Frame.pipeIs[i]){
+                g.drawImage(img[17], Frame.pipes[i].getX(), Frame.pipes[i].getHeight()+70, null);
+                g.drawImage(img[18], Frame.pipes[i].getX(), Frame.pipes[i].getHeight()-562, null);
+            }
+        }
+
+        g2d.translate(160, Bird.y);
+        g2d.rotate(Bird.angle);
+        g.drawImage(img[11+Bird.tex], -34, -24, null);
+        g2d.rotate(-Bird.angle);
+        g2d.translate(-160, -Bird.y);
+
+        g.drawImage(img[15], -Frame.groundCycle, 640, null);
+        String score = Integer.toString(Frame.score);
+        if(!Frame.menu){
+            if(!Bird.started){
+                g.drawImage(img[21], 114, 100, null);
+                g.drawImage(img[22], 250, 310, null);
+            }
+            for(int i = 0; i < score.length(); i++){
+                g.drawImage(img[Integer.parseInt(String.valueOf(score.charAt(i)))], 288-score.length()*18+i*36, 50, null);
+            }
+        }
+        else{
+            g.drawImage(img[16], 119, 140, null);
+            g.drawImage(img[14], 141, 200, null);
+            if(Frame.new_best) g.drawImage(img[20], 273, 312, null);
+            for(int i = 0; i < score.length(); i++){
+                g.drawImage(img[Integer.parseInt(String.valueOf(score.charAt(i)))], 409-score.length()*36+i*36, 264, null);
+            }
+            score = Integer.toString(Frame.best);
+            for(int i = 0; i < score.length(); i++){
+                g.drawImage(img[Integer.parseInt(String.valueOf(score.charAt(i)))], 409-score.length()*36+i*36, 347, null);
+            }
+            g.drawImage(img[19], 213, 450, null);
+        }
+    }
+    public void chargeTextures(){
+        img[0] = new ImageIcon("assets/0.png").getImage();
+        img[1] = new ImageIcon("assets/1.png").getImage();
+        img[2] = new ImageIcon("assets/2.png").getImage();
+        img[3] = new ImageIcon("assets/3.png").getImage();
+        img[4] = new ImageIcon("assets/4.png").getImage();
+        img[5] = new ImageIcon("assets/5.png").getImage();
+        img[6] = new ImageIcon("assets/6.png").getImage();
+        img[7] = new ImageIcon("assets/7.png").getImage();
+        img[8] = new ImageIcon("assets/8.png").getImage();
+        img[9] = new ImageIcon("assets/9.png").getImage();
+
+        img[10] = new ImageIcon("assets/bg.png").getImage();
+
+        img[11] = new ImageIcon("assets/bird-0.png").getImage();
+        img[12] = new ImageIcon("assets/bird-1.png").getImage();
+        img[13] = new ImageIcon("assets/bird-2.png").getImage();
+
+        img[14] = new ImageIcon("assets/board.png").getImage();
+        img[15] = new ImageIcon("assets/ground.png").getImage();
+        img[16] = new ImageIcon("assets/over.png").getImage();
+        img[17] = new ImageIcon("assets/pipeB.png").getImage();
+        img[18] = new ImageIcon("assets/pipeH.png").getImage();
+        img[19] = new ImageIcon("assets/restart.png").getImage();
+        img[20] = new ImageIcon("assets/new.png").getImage();
+
+        img[21] = new ImageIcon("assets/get.png").getImage();
+        img[22] = new ImageIcon("assets/tap.png").getImage();
+    }
+}
