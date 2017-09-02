@@ -3,6 +3,7 @@ Task list
 - [X] Implement an API interface
 - [X] Implement a local visualization
 - [ ] Prepare gif/png scrap - tanks, walls, flags ...
+- [ ] Try to implement visualization of brick wall
 - [ ] Implement basic field elements (brick walls, solid walls, flags) uploading files, parsing them e.t.c
 - [ ] Implement basic dynamics - bullet flying, brick walls crushing
 - [ ] Implement testing mode: tank bots, game modes (?)
