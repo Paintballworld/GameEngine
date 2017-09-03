@@ -3,6 +3,9 @@ Task list
 - [X] Implement an API interface
 - [X] Implement a local visualization
 - [X] Prepare gif/png scrap - tanks, walls, flags ...
+- [X] Implement a class loading process in Runtime
+- [ ] Add a protection for using reflection API
+- [ ] Rebuild project to multiple modules
 - [ ] Try to implement visualization of brick wall
 - [ ] Implement basic field elements (brick walls, solid walls, flags) uploading files, parsing them e.t.c
 - [ ] Implement basic dynamics - bullet flying, brick walls crushing
