@@ -2,7 +2,9 @@ package com.itechtopus.tanks.uploader.uri_jar_uploader;
 
 import com.itechtopus.tanks.interfaces.Tanker;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -35,7 +37,33 @@ public class Test1 {
 
         Tanker tanker = (Tanker) beanClass.newInstance();
 
-        tanker.run();
+        Thread toTerminate = new Thread(tanker);
+
+        toTerminate.start();
+
+        String line;
+
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        while (toTerminate.getState() != Thread.State.TERMINATED) {
+            line = reader.readLine();
+            System.out.println("-->" + line);
+            if (line.equalsIgnoreCase("stop")) {
+                System.out.println("Attempt to use stop");
+                toTerminate.stop();
+            }
+            if (line.equalsIgnoreCase("interrupt")) {
+                System.out.println("Attempt to interrupt");
+                toTerminate.interrupt();
+            }
+            if (line.equalsIgnoreCase("destroy")) {
+                System.out.println("Attempt to use destroy");
+                toTerminate.destroy();
+            }
+            System.out.println(toTerminate.getState());
+        }
+
+
 
         /*// Create a new instance from the loaded class
         Constructor<?> constructor = beanClass.getConstructor();
