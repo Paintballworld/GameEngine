@@ -6,6 +6,7 @@ Task list
 - [ ] Try to implement visualization of brick wall
 - [ ] Implement basic field elements (brick walls, solid walls, flags) uploading files, parsing them e.t.c
 - [ ] Implement basic dynamics - bullet flying, brick walls crushing
+- [ ] Rebuild API to make controlling of lifecycle be on a gameEngine side (Make thread be terminable)
 - [ ] Implement testing mode: tank bots, game modes (?)
 - [ ] Implement web - visualization of a battle
 - [ ] Implement UI profiling - registration, login/logout, profile page
