@@ -40,18 +40,18 @@ public class Main {
         Thread player1Routine = new Thread(player1);
         player1Routine.start();
 
-        /*new Thread(() -> {
+        new Thread(() -> {
            while (true) {
-               drawer.draw();
-//               System.out.println(aTank.getPosition().getMiddlePoint());
+               System.out.println("Memory:" + Runtime.getRuntime().maxMemory());
+               System.out.println("Free memory:" + Runtime.getRuntime().freeMemory());
                try {
-                   Thread.sleep(DRAWER_SLEEP_TIME);
+                   Thread.sleep(3000);
                } catch (InterruptedException e) {
                    System.out.println("Time to exit");
                    break;
                }
            }
-        }).start();*/
+        }).start();
 
     }
 }
