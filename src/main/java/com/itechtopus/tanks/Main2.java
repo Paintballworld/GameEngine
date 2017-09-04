@@ -27,18 +27,18 @@ public class Main2 {
         }
         System.out.println(JarUtil.getSimpleName("org.tomcat.apache.CodeWars"));
 
-        List<Runnable> allRunnables = new ArrayList<>();
+        List<Runnable> allRunnable = new ArrayList<>();
         for (String className : JarUtil.getClassesImplementing(Runnable.class, jarFileUri)) {
             System.out.println("implements Runnable : " + className);
-            allRunnables.add(JarUtil.loadClassImplementing(Runnable.class, jarFileUri, className));
+            allRunnable.add(JarUtil.loadClassImplementing(Runnable.class, jarFileUri, className));
         }
 
-        for (Runnable runnable : allRunnables) {
+        for (Runnable runnable : allRunnable) {
             new Thread(runnable).start();
         }
 
         try {
-            for (String s : JarUtil.getImports(allRunnables.get(0).getClass())) {
+            for (String s : JarUtil.getImports(allRunnable.get(0).getClass())) {
                 System.out.println("::" + s);
             }
         } catch (FileNotFoundException e) {
