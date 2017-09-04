@@ -1,7 +1,9 @@
 package com.itechtopus.tanks.util;
 
-import java.io.FileInputStream;
-import java.io.IOException;
+import com.thoughtworks.qdox.JavaDocBuilder;
+import com.thoughtworks.qdox.model.JavaSource;
+
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -95,8 +97,11 @@ public class JarUtil {
         return fullName.substring(fullName.lastIndexOf('.') + 1);
     }
 
-    public static boolean hasImport(String importPart, Class<?> aClass) {
-        // TODO
-        return false;
+    public static List<String> getImports(Class<?> aClass) throws FileNotFoundException {
+        JavaDocBuilder builder = new JavaDocBuilder();
+        builder.addSource(new InputStreamReader(aClass.getClassLoader().getResourceAsStream(aClass.getName())));
+        JavaSource src = builder.getSources()[0];
+        return Arrays.asList(src.getImports());
     }
+
 }
