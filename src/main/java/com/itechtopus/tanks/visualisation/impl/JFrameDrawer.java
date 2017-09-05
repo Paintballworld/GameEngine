@@ -1,6 +1,5 @@
 package com.itechtopus.tanks.visualisation.impl;
 
-import com.itechtopus.tanks.implementations.FieldReal;
 import com.itechtopus.tanks.interfaces.field.Field;
 import com.itechtopus.tanks.interfaces.models.MovingModel;
 import com.itechtopus.tanks.visualisation.CanvasDrawer;
@@ -13,7 +12,7 @@ import java.util.List;
 public class JFrameDrawer implements CanvasDrawer{
 
     Field field;
-    java.util.List<MovingModel> models = new ArrayList<>();
+    List<MovingModel> models = new ArrayList<>();
     private final int BLOCK_SIZE;
 
     public JFrameDrawer(int blocksize, Field field, MovingModel... models) {
