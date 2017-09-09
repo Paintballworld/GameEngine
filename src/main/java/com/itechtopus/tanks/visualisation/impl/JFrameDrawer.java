@@ -24,7 +24,7 @@ public class JFrameDrawer implements CanvasDrawer{
     @Override
     public void draw() {
         EventQueue.invokeLater(() -> {
-            PointsEx ex = new PointsEx(BLOCK_SIZE, field, models);
+            PointsEx ex = new PointsEx(field, models);
             ex.setVisible(true);
         });
     }

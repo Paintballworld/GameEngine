@@ -12,22 +12,22 @@ import java.awt.event.WindowEvent;
 import java.util.*;
 import java.util.List;
 
+import static com.itechtopus.tanks.staticSettings.Settings.BLOCK_SIZE;
+
 public class PointsEx extends JFrame {
 
     Field field;
     List<MovingModel> models = new ArrayList<>();
-    private final int BLOCK_SIZE;
 
-    public PointsEx(int blockSize, Field field, List<MovingModel> models) {
+    public PointsEx(Field field, List<MovingModel> models) {
         this.field = field;
         this.models = models;
-        BLOCK_SIZE = blockSize;
         initUI();
     }
 
     private void initUI() {
 
-        final Surface surface = new Surface(BLOCK_SIZE, field, models);
+        final Surface surface = new Surface(field, models);
         add(surface);
 
         addWindowListener(new WindowAdapter() {
@@ -51,7 +51,7 @@ public class PointsEx extends JFrame {
             @Override
             public void run() {
 
-                PointsEx ex = new PointsEx(0, null, null);
+                PointsEx ex = new PointsEx(null, null);
                 ex.setVisible(true);
             }
         });
