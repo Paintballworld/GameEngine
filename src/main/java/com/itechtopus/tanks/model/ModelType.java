@@ -2,7 +2,11 @@ package com.itechtopus.tanks.model;
 
 public enum ModelType {
 
-    TANK(4,4), BLOCK(1,1);
+    TANK(4,4),
+    SOLID_BLOCK(1,1),
+    BRICK_BLOCK(1, 1),
+    EXPLOSION(4, 4),
+    ;
 
     private int sixeX;
     private int sizeY;
