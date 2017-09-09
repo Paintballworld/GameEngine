@@ -1,8 +1,11 @@
 package com.itechtopus.tanks.visualisation.impl.j_frame;
 
+import com.itechtopus.tanks.factory.ImageFactory;
 import com.itechtopus.tanks.implementations.PositionReal;
 import com.itechtopus.tanks.interfaces.field.Field;
 import com.itechtopus.tanks.interfaces.models.MovingModel;
+import com.itechtopus.tanks.model.ModelType;
+import com.itechtopus.tanks.util.ImageUploadingException;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,34 +19,31 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.Timer;
 
+import static com.itechtopus.tanks.staticSettings.Settings.BLOCK_SIZE;
+
 class Surface extends JPanel implements ActionListener {
 
     private final int DELAY = 100;
     private Timer timer;
     private Field field;
     private List<MovingModel> models = new ArrayList<>();
-    private final int BLOCK_SIZE;
     private Image tank;
-    private static final String IMAGE_LOCATION = "com/itechtopus/tanks/visualization/imp/j_frame/images/";
-    private static final String TANK_IMAGE_LOCATION = IMAGE_LOCATION + /*"boom.png";//*/"gold_tank.png";
     private BufferedImage bufTank;
 
-    public Surface(int blockSize, Field field, List<MovingModel> models) {
+    public Surface(Field field, List<MovingModel> models) {
         this.field = field;
         this.models = models;
-        BLOCK_SIZE = blockSize;
         initTextures();
         initTimer();
     }
 
     private void initTextures() {
-        URL url = Surface.class.getClassLoader().getResource(TANK_IMAGE_LOCATION);
-        tank = new ImageIcon(url).getImage();
-        bufTank = new BufferedImage(4 * BLOCK_SIZE, 4 * BLOCK_SIZE, BufferedImage.TYPE_INT_RGB);
-        Graphics2D gt = bufTank.createGraphics();
-        gt.drawImage(tank, 0, 0, 4 * BLOCK_SIZE, 4 * BLOCK_SIZE, null);
-        AlphaComposite ac = java.awt.AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.5F);
-        gt.setComposite(ac);
+        try {
+            bufTank = ImageFactory.getImage(ModelType.TANK);
+        } catch (ImageUploadingException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     private void initTimer() {
