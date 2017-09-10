@@ -59,8 +59,6 @@ class Surface extends JPanel implements ActionListener {
 
         Graphics2D g2d = (Graphics2D) g;
 
-        drawCells(g2d);
-
         for (MovingModel model : models) {
             PositionReal p = (PositionReal) model.getPosition();
             g2d.setPaint(Color.BLACK);
@@ -76,16 +74,6 @@ class Surface extends JPanel implements ActionListener {
                     (int) (p.getRealMinY() * BLOCK_SIZE),
                     (int) ((p.getRealMaxX() - p.getRealMinX()) * BLOCK_SIZE),
                     (int) ((p.getRealMaxY() - p.getRealMinY()) * BLOCK_SIZE), null);
-        }
-    }
-
-    private void drawCells(Graphics2D g2d) {
-        g2d.setColor(Color.WHITE);
-        for (int y = 0; y < field.getHeight(); y++) {
-            g2d.drawLine(0, y * BLOCK_SIZE, field.getWidth() * BLOCK_SIZE, y * BLOCK_SIZE);
-        }
-        for (int x = 0; x < field.getWidth(); x++) {
-            g2d.drawLine(x * BLOCK_SIZE, 0, x * BLOCK_SIZE, field.getHeight() * BLOCK_SIZE);
         }
     }
 
