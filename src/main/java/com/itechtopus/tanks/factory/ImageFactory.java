@@ -28,9 +28,11 @@ public class ImageFactory {
         BufferedImage result;
         Image image ;
         image = loadImage(type);
-        result = new BufferedImage(4 * BLOCK_SIZE, 4 * BLOCK_SIZE, BufferedImage.TYPE_INT_RGB);
+        result = new BufferedImage(type.getSizeX() * BLOCK_SIZE,
+                type.getSizeY() * BLOCK_SIZE, BufferedImage.TYPE_INT_RGB);
         Graphics2D gt = result.createGraphics();
-        gt.drawImage(image, 0, 0, 4 * BLOCK_SIZE, 4 * BLOCK_SIZE, null);
+        gt.drawImage(image, 0, 0, type.getSizeX() * BLOCK_SIZE,
+                type.getSizeY() * BLOCK_SIZE, null);
         AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.CLEAR, 0.5F);
         gt.setComposite(ac);
         return result;
