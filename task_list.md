@@ -4,7 +4,8 @@ Task list
 - [X] Implement a local visualization
 - [X] Prepare gif/png scrap - tanks, walls, flags ...
 - [X] Implement a class loading process in Runtime
-- [ ] Rebuild image loading process to universal usage for different types of objects
+- [X] Rebuild image loading process to universal usage for different types of objects
+- [ ] Implement an algorithm to define brick wall's shape
 - [ ] Improve a field implementation to manage all drawable objects
 - [ ] Implement dynamic tank skin loading to give an ability to upload new tank skins in Runtime
 - [ ] Add a restriction for using reflection API
