@@ -5,51 +5,52 @@ import com.itechtopus.tanks.implementations.PositionReal;
 import com.itechtopus.tanks.interfaces.field.Field;
 import com.itechtopus.tanks.interfaces.models.MovingModel;
 import com.itechtopus.tanks.model.ModelType;
+import com.itechtopus.tanks.model.RealMovingModel;
 import com.itechtopus.tanks.util.ImageUploadingException;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 import static com.itechtopus.tanks.staticSettings.Settings.BLOCK_SIZE;
+import static com.itechtopus.tanks.staticSettings.Settings.DRAWER_SLEEP_TIME;
 
 class Surface extends JPanel implements ActionListener {
 
-  private final int DELAY = 100;
   private Timer timer;
   private Field field;
-  private List<MovingModel> models = new ArrayList<>();
-  private Map<MovingModel, BufferedImage> bufferedImageMap = new HashMap<>();
+  private List<RealMovingModel> models = new ArrayList<>();
 
   public Surface(Field field, List<MovingModel> models) {
     this.field = field;
-    this.models = models;
-    initTextures();
+    initTexturesCache(models);
     initTimer();
   }
 
-  private void initTextures() {
+  private void initTexturesCache(List<MovingModel> models) {
+    int texturesLoaded = 0;
     for (MovingModel model : models) {
       try {
         BufferedImage newBufImage = ImageFactory.getImage(ModelType.TANK);
-        bufferedImageMap.put(model, newBufImage);
+        this.models.add(new RealMovingModel(model, newBufImage));
+        texturesLoaded++;
       } catch (ImageUploadingException e) {
         e.printStackTrace();
         throw new RuntimeException(e);
       }
     }
+    System.out.println(texturesLoaded + " textures loaded successfully");
   }
 
   private void initTimer() {
-    timer = new Timer(DELAY, this);
+    timer = new Timer(DRAWER_SLEEP_TIME, this);
     timer.start();
   }
 
@@ -61,13 +62,18 @@ class Surface extends JPanel implements ActionListener {
 
     Graphics2D g2d = (Graphics2D) g;
 
-    for (MovingModel model : models) {
+    g2d.setPaint(Color.BLACK);
+    g2d.fillRect(0, 0, field.getWidth() * BLOCK_SIZE, field.getHeight() * BLOCK_SIZE);
 
-      BufferedImage bufTank = bufferedImageMap.get(model);
+
+    int modelsDrawn = 0;
+
+    for (RealMovingModel realModel : models) {
+
+      BufferedImage bufTank = realModel.getImage();
+      MovingModel model = realModel.getMovingModel();
 
       PositionReal p = (PositionReal) model.getPosition();
-      g2d.setPaint(Color.BLACK);
-      g2d.fillRect(0, 0, field.getWidth() * BLOCK_SIZE, field.getHeight() * BLOCK_SIZE);
 
       double rotationRequired = Math.toRadians(((model.getDirection().ordinal() - 1) % 4) * 90);
       AffineTransform transform = new AffineTransform();
@@ -79,7 +85,11 @@ class Surface extends JPanel implements ActionListener {
         (int) (p.getRealMinY() * BLOCK_SIZE),
         (int) ((p.getRealMaxX() - p.getRealMinX()) * BLOCK_SIZE),
         (int) ((p.getRealMaxY() - p.getRealMinY()) * BLOCK_SIZE), null);
+
+      modelsDrawn++;
     }
+
+    System.out.println(modelsDrawn + " models drawn");
   }
 
   @Override

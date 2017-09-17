@@ -25,7 +25,7 @@ public class ImageFactory {
   private static final AtomicInteger tankSkinCounter = new AtomicInteger(0);
   private static final String[] tankImages = new String[]{
     "gold_tank.png",
-    "green_tank.jpg"};
+    "green_tank.png"};
 
   public static BufferedImage getImage(ModelType type) throws ImageUploadingException {
     BufferedImage result;

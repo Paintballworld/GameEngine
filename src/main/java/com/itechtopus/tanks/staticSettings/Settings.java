@@ -11,4 +11,5 @@ package com.itechtopus.tanks.staticSettings;
 public class Settings {
 
   public static final int BLOCK_SIZE = 12;
+  public static final int DRAWER_SLEEP_TIME = 200;
 }

@@ -17,28 +17,34 @@ import com.itechtopus.tanks.visualisation.impl.JFrameDrawer;
 
 public class Main {
 
-  private static final long DRAWER_SLEEP_TIME = 1000L;
-  private Tanker tanker;
-
   public static void main(String[] args) {
     Tanker player1 = new MyTanker();
+    Tanker player2 = new MyTanker();
 
     Field field = new FieldReal(52, 52, player1);
     GameEngine engine = new MainGameEngine(field);
-    Tank aTank = new RealTank(new PositionReal(ModelType.TANK, 5, 5, Direction.DOWN), 100, engine);
 
-    Tank bTank = new RealTank(new PositionReal(ModelType.TANK, 12, 12, Direction.DOWN), 100, engine);
+    Tank aTank = new RealTank(new PositionReal(ModelType.TANK, 5, 5, Direction.DOWN), 100, engine);
+    Tank bTank = new RealTank(new PositionReal(ModelType.TANK, 12, 12, Direction.UP), 100, engine);
 
     player1.setMyTank(aTank);
-    player1.setGameEngine(engine);
-    aTank.go();
+    player2.setMyTank(bTank);
 
-    CanvasDrawer drawer = new JFrameDrawer(10, field, aTank);
+    player1.setGameEngine(engine);
+    player2.setGameEngine(engine);
+
+    aTank.go();
+    bTank.go();
+
+    CanvasDrawer drawer = new JFrameDrawer(10, field, aTank, bTank);
 
     drawer.draw();
 
     Thread player1Routine = new Thread(player1);
+    Thread player2Routine = new Thread(player2);
+
     player1Routine.start();
+    player2Routine.start();
 
     new Thread(() -> {
       while (true) {
