@@ -6,27 +6,28 @@ import com.itechtopus.tanks.visualisation.CanvasDrawer;
 import com.itechtopus.tanks.visualisation.impl.j_frame.PointsEx;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class JFrameDrawer implements CanvasDrawer{
+public class JFrameDrawer implements CanvasDrawer {
 
-    Field field;
-    List<MovingModel> models = new ArrayList<>();
-    private final int BLOCK_SIZE;
+  private final int BLOCK_SIZE;
+  Field field;
+  List<MovingModel> models = new ArrayList<>();
 
-    public JFrameDrawer(int blocksize, Field field, MovingModel... models) {
-        this.field = field;
-        this.models = Arrays.asList(models);
-        this.BLOCK_SIZE = blocksize;
-    }
+  public JFrameDrawer(int blocksize, Field field, MovingModel... models) {
+    this.field = field;
+    this.models = Arrays.asList(models);
+    this.BLOCK_SIZE = blocksize;
+  }
 
-    @Override
-    public void draw() {
-        EventQueue.invokeLater(() -> {
-            PointsEx ex = new PointsEx(field, models);
-            ex.setVisible(true);
-        });
-    }
+  @Override
+  public void draw() {
+    EventQueue.invokeLater(() -> {
+      PointsEx ex = new PointsEx(field, models);
+      ex.setVisible(true);
+    });
+  }
 }
 

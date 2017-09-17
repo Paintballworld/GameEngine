@@ -10,7 +10,7 @@ package com.itechtopus.tanks.util;
  */
 public class JarInstantiationException extends RuntimeException {
 
-    public JarInstantiationException(String message) {
-        super(message);
-    }
+  public JarInstantiationException(String message) {
+    super(message);
+  }
 }

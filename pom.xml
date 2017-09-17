@@ -1,42 +1,42 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.itechtopus.tanks</groupId>
-  <artifactId>GameEngine</artifactId>
-  <packaging>war</packaging>
-  <version>1.0</version>
-  <name>GameEngine Maven Webapp</name>
-  <url>http://maven.apache.org</url>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.itechtopus.tanks</groupId>
+    <artifactId>GameEngine</artifactId>
+    <packaging>war</packaging>
+    <version>1.0</version>
+    <name>GameEngine Maven Webapp</name>
+    <url>http://maven.apache.org</url>
 
-  <properties>
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-  </properties>
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
 
-  <dependencies>
+    <dependencies>
 
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
-    </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
 
-    <dependency>
-      <groupId>com.itechtopus.tanks</groupId>
-      <artifactId>BattleFieldAPI</artifactId>
-      <version>1.1-SNAPSHOT</version>
-    </dependency>
+        <dependency>
+            <groupId>com.itechtopus.tanks</groupId>
+            <artifactId>BattleFieldAPI</artifactId>
+            <version>1.1-SNAPSHOT</version>
+        </dependency>
 
-    <dependency>
-      <groupId>qdox</groupId>
-      <artifactId>qdox</artifactId>
-      <version>1.6.1</version>
-    </dependency>
+        <dependency>
+            <groupId>qdox</groupId>
+            <artifactId>qdox</artifactId>
+            <version>1.6.1</version>
+        </dependency>
 
-  </dependencies>
+    </dependencies>
 
-  <build>
-    <finalName>GameEngine</finalName>
-  </build>
+    <build>
+        <finalName>GameEngine</finalName>
+    </build>
 </project>

@@ -3,10 +3,7 @@ package com.itechtopus.tanks.uploader.uri_jar_uploader;
 import com.itechtopus.tanks.interfaces.Tanker;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -20,48 +17,48 @@ import java.net.URLClassLoader;
  */
 public class Test1 {
 
-    private static String jarFileUri = "file:///home/me/IdeaProjects/Tankist/target/Tankist-1.0-SNAPSHOT.jar";
-    private static String jarClassFullName = "SuperTanker";
+  private static String jarFileUri = "file:///home/me/IdeaProjects/Tankist/target/Tankist-1.0-SNAPSHOT.jar";
+  private static String jarClassFullName = "SuperTanker";
 
-    public static void main(String[] args) throws Exception {
+  public static void main(String[] args) throws Exception {
 
 
-        // Getting the jar URL which contains target class
-        URL[] classLoaderUrls = new URL[]{new URL(jarFileUri)};
+    // Getting the jar URL which contains target class
+    URL[] classLoaderUrls = new URL[]{new URL(jarFileUri)};
 
-        // Create a new URLClassLoader
-        URLClassLoader urlClassLoader = new URLClassLoader(classLoaderUrls);
+    // Create a new URLClassLoader
+    URLClassLoader urlClassLoader = new URLClassLoader(classLoaderUrls);
 
-        // Load the target class
-        Class<?> beanClass = urlClassLoader.loadClass(jarClassFullName);
+    // Load the target class
+    Class<?> beanClass = urlClassLoader.loadClass(jarClassFullName);
 
-        Tanker tanker = (Tanker) beanClass.newInstance();
+    Tanker tanker = (Tanker) beanClass.newInstance();
 
-        Thread toTerminate = new Thread(tanker);
+    Thread toTerminate = new Thread(tanker);
 
-        toTerminate.start();
+    toTerminate.start();
 
-        String line;
+    String line;
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
-        while (toTerminate.getState() != Thread.State.TERMINATED) {
-            line = reader.readLine();
-            System.out.println("-->" + line);
-            if (line.equalsIgnoreCase("stop")) {
-                System.out.println("Attempt to use stop");
-                toTerminate.stop();
-            }
-            if (line.equalsIgnoreCase("interrupt")) {
-                System.out.println("Attempt to interrupt");
-                toTerminate.interrupt();
-            }
-            if (line.equalsIgnoreCase("destroy")) {
-                System.out.println("Attempt to use destroy");
-                toTerminate.destroy();
-            }
-            System.out.println(toTerminate.getState());
-        }
+    while (toTerminate.getState() != Thread.State.TERMINATED) {
+      line = reader.readLine();
+      System.out.println("-->" + line);
+      if (line.equalsIgnoreCase("stop")) {
+        System.out.println("Attempt to use stop");
+        toTerminate.stop();
+      }
+      if (line.equalsIgnoreCase("interrupt")) {
+        System.out.println("Attempt to interrupt");
+        toTerminate.interrupt();
+      }
+      if (line.equalsIgnoreCase("destroy")) {
+        System.out.println("Attempt to use destroy");
+        toTerminate.destroy();
+      }
+      System.out.println(toTerminate.getState());
+    }
 
 
 
@@ -73,6 +70,6 @@ public class Test1 {
         method.invoke(beanObj);*/
 
 
-    }
+  }
 
 }

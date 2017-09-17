@@ -9,20 +9,20 @@ package com.itechtopus.tanks.security;
  * GameEngine
  */
 public class ReflectSecurityManager extends SecurityManager {
-    @Override
-    public void checkPackageAccess(String pkg) {
-        System.out.println("ReflectSecurityManager pkg = " + pkg);
-        super.checkPackageAccess(pkg);
-    }
+  @Override
+  public void checkPackageAccess(String pkg) {
+    System.out.println("ReflectSecurityManager pkg = " + pkg);
+    super.checkPackageAccess(pkg);
+  }
 
-    @Override
-    public void checkCreateClassLoader() {
+  @Override
+  public void checkCreateClassLoader() {
 //        ignore
 //        super.checkCreateClassLoader();
-    }
+  }
 
-    @Override
-    public void checkRead(String file) {
+  @Override
+  public void checkRead(String file) {
 //        super.checkRead(file);
-    }
+  }
 }

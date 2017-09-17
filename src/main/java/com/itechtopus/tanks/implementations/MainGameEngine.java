@@ -6,31 +6,31 @@ import com.itechtopus.tanks.interfaces.field.Field;
 
 import java.util.List;
 
-public class MainGameEngine implements GameEngine{
+public class MainGameEngine implements GameEngine {
 
-    private final Field field;
+  private final Field field;
 
-    public MainGameEngine(Field field) {
-        this.field = field;
-    }
+  public MainGameEngine(Field field) {
+    this.field = field;
+  }
 
-    @Override
-    public List<TankInfo> getEnemyInfo() {
-        return null;
-    }
+  @Override
+  public List<TankInfo> getEnemyInfo() {
+    return null;
+  }
 
-    @Override
-    public Field getField() {
-        return field;
-    }
+  @Override
+  public Field getField() {
+    return field;
+  }
 
-    @Override
-    public int getMyLifesLeft() {
-        return 0;
-    }
+  @Override
+  public int getMyLifesLeft() {
+    return 0;
+  }
 
-    @Override
-    public int getEnemyLifesLeft() {
-        return 0;
-    }
+  @Override
+  public int getEnemyLifesLeft() {
+    return 0;
+  }
 }

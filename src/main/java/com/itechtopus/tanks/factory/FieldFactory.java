@@ -5,6 +5,6 @@ import com.itechtopus.tanks.interfaces.field.Field;
 
 public interface FieldFactory {
 
-    Field createFieldCopyFor(Tanker player);
+  Field createFieldCopyFor(Tanker player);
 
 }

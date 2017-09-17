@@ -10,8 +10,8 @@ package com.itechtopus.tanks.util;
  */
 public class ImageUploadingException extends Throwable {
 
-    public ImageUploadingException(String message) {
-        super(message);
-    }
+  public ImageUploadingException(String message) {
+    super(message);
+  }
 }
 

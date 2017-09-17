@@ -13,44 +13,44 @@ import java.util.Arrays;
 
 public class SoutCanvasDrawer implements CanvasDrawer {
 
-    private Field field;
+  private Field field;
 
-    public SoutCanvasDrawer(Field field, MovingModel... movingModels) {
-        this.field = field;
-        models.addAll(Arrays.asList(movingModels));
-    }
+  public SoutCanvasDrawer(Field field, MovingModel... movingModels) {
+    this.field = field;
+    models.addAll(Arrays.asList(movingModels));
+  }
 
-    @Override
-    public void draw() {
-        for (int y = -1; y <= field.getHeight(); y++) {
-            System.out.print(Math.abs(y) % 10);
-            for (int x = 0; x < field.getWidth(); x++) {
-                String ch = " ";
-                if (y == field.getHeight())
-                    ch = "-";
-                else if (y == -1)
-                    ch = "" + Math.abs(x) % 10;
-                else {
-                    if (field.getBlockAt(x, y) == BlockType.BRICK) ch = "B";
-                    if (field.getBlockAt(x, y) == BlockType.STONE) ch = "S";
-                    for (MovingModel model : models) {
-                        if (PositionReal.containsPoint(model.getPosition(), new Point(x, y)))
-                            ch = "T";
-                    }
-                }
-                System.out.print(ch);
-            }
-            System.out.println('|');
+  public static void main(String[] args) {
+    Field field = new FieldReal(40, 40, new MyTanker());
+    SoutCanvasDrawer drawer = new SoutCanvasDrawer(field);
+    drawer.draw();
+  }
+
+  @Override
+  public void draw() {
+    for (int y = -1; y <= field.getHeight(); y++) {
+      System.out.print(Math.abs(y) % 10);
+      for (int x = 0; x < field.getWidth(); x++) {
+        String ch = " ";
+        if (y == field.getHeight())
+          ch = "-";
+        else if (y == -1)
+          ch = "" + Math.abs(x) % 10;
+        else {
+          if (field.getBlockAt(x, y) == BlockType.BRICK) ch = "B";
+          if (field.getBlockAt(x, y) == BlockType.STONE) ch = "S";
+          for (MovingModel model : models) {
+            if (PositionReal.containsPoint(model.getPosition(), new Point(x, y)))
+              ch = "T";
+          }
         }
-
-        System.out.println(models.get(0).getPosition().getMiddlePoint());
-        System.out.println(models.get(0).getPosition().getMinX() + ", " + models.get(0).getPosition().getMinY());
-        System.out.println(models.get(0).getPosition().getMaxX() + ", " + models.get(0).getPosition().getY());
+        System.out.print(ch);
+      }
+      System.out.println('|');
     }
 
-    public static void main(String[] args) {
-        Field field = new FieldReal(40, 40, new MyTanker());
-        SoutCanvasDrawer drawer = new SoutCanvasDrawer(field);
-        drawer.draw();
-    }
+    System.out.println(models.get(0).getPosition().getMiddlePoint());
+    System.out.println(models.get(0).getPosition().getMinX() + ", " + models.get(0).getPosition().getMinY());
+    System.out.println(models.get(0).getPosition().getMaxX() + ", " + models.get(0).getPosition().getY());
+  }
 }
